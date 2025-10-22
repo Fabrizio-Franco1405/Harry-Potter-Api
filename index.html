@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Potter - Personajes</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./lib/bootstrap-5.3.8-dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="styles/estilos.css">
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-hat-wizard me-2"></i>Harry Potter
+            </a>
+            <div class="d-flex">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar personajes...">
+                    <button class="btn btn-outline-light" type="button" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container my-4">
+        <h1 class="text-center mb-4">Personajes de Harry Potter</h1>
+        
+        <!-- Filtros -->
+        <div class="filters mb-4">
+            <button class="btn btn-outline-secondary active" data-house="all">Todos</button>
+            <button class="btn btn-outline-danger" data-house="Gryffindor">Gryffindor</button>
+            <button class="btn btn-outline-success" data-house="Slytherin">Slytherin</button>
+            <button class="btn btn-outline-warning" data-house="Hufflepuff">Hufflepuff</button>
+            <button class="btn btn-outline-primary" data-house="Ravenclaw">Ravenclaw</button>
+        </div>
+        
+        <!-- Contenedor de personajes -->
+        <div id="loading" class="text-center my-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando personajes...</p>
+        </div>
+        
+        <div id="charactersGrid" class="row g-4">
+            <!-- Los personajes se cargarán aquí -->
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="./lib/jquery/jquery-3.7.1.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="./lib/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Nuestro script -->
+    <script src="app/app.js"></script>
+</body>
+</html>
