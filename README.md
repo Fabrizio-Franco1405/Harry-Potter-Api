@@ -1,17 +1,17 @@
-# Conexión a una API mediante HTTP, AJAX, jQuery y manejo de errores
+# ✨ Conexión a una API mediante HTTP, AJAX, jQuery y manejo de errores
 
-Proyecto: Práctica evaluada — Conexión a una API (Harry Potter API)  
-Autor: Fabrizio Franco  
-Matrícula / Curso: Electiva II  
-Profesora: Sabrina Colmenarez  
-Fecha de entrega: 24 de Octubre del 2025
+📌 Proyecto: Práctica evaluada — Conexión a una API (Harry Potter API)  
+👨‍💻 Autor: Fabrizio Franco  
+📚 Matrícula / Curso: Electiva II  
+👩‍🏫 Profesora: Sabrina Colmenarez  
+📅 Fecha de entrega: 24 de Octubre del 2025
 
 ---
 
-## Descripción
-Práctica para demostrar la conexión desde el front-end a una API REST usando técnicas HTTP/AJAX con manejo de errores y presentación de datos en la interfaz. El proyecto consume datos del universo de Harry Potter y muestra la integración entre la lógica JavaScript y la UI disponible en el repositorio.
+## 📝 Descripción
+Práctica para demostrar la conexión desde el front-end a una API REST usando técnicas HTTP/AJAX con manejo de errores y presentación de datos en la interfaz. El proyecto consume datos del universo de Harry Potter 🪄 y muestra la integración entre la lógica JavaScript y la UI disponible en el repositorio.
 
-Importante: este README no añade ejemplos de código que no estén ya presentes en tu proyecto. Para ver implementaciones concretas (peticiones, manejo de errores, renderizado), revisa el archivo app/app.js incluido en este repositorio.
+⚠️ Importante: Este README no añade ejemplos de código que no estén ya presentes en tu proyecto. Para ver implementaciones concretas (peticiones, manejo de errores, renderizado), revisa el archivo app/app.js incluido en este repositorio.
 
 ## Tecnologías utilizadas
 - HTML5
@@ -30,7 +30,7 @@ Ejemplos de endpoints que suelen usarse con HP-API:
 - GET /api/characters/staff
 - GET /api/characters/house/:house
 
-## Estructura exacta del proyecto
+## 📂 Estructura exacta del proyecto
 Este README refleja únicamente los archivos y carpetas que existen actualmente en el repositorio:
 
 - index.html
