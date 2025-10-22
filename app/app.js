@@ -1,5 +1,14 @@
 // URL base de la API de Harry Potter
-const API_URL = 'https://api.potterdb.com/v1/characters';
+const API_URL = 'https://harry-potter-api.onrender.com';
+
+// Mapeo de casas
+const HOUSE_MAPPING = {
+    'Gryffindor': 'Gryffindor',
+    'Slytherin': 'Slytherin',
+    'Hufflepuff': 'Hufflepuff',
+    'Ravenclaw': 'Ravenclaw',
+    '': 'Desconocida'
+};
 
 // Variables globales
 let allCharacters = [];
@@ -18,23 +27,21 @@ function fetchCharacters() {
     $loading.show();
     $charactersGrid.empty();
     
-    fetch(API_URL)
+    fetch(`${API_URL}/personajes`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Error al cargar los personajes');
             }
             return response.json();
         })
-        .then(data => {
-            allCharacters = data.data.map(character => ({
+        .then(characters => {
+            allCharacters = characters.map(character => ({
                 id: character.id,
-                name: character.attributes.name,
-                house: character.attributes.house || 'Desconocida',
-                species: character.attributes.species || 'Desconocida',
-                patronus: character.attributes.patronus || 'Desconocido',
-                ancestry: character.ancestry || 'Desconocida',
-                image: character.attributes.image || 'https://via.placeholder.com/300x400?text=Sin+imagen',
-                actor: character.attributes.actor || 'Desconocido'
+                name: character.personaje || 'Personaje desconocido',
+                nickname: character.apodo || '',
+                house: character.casaDeHogwarts || 'Desconocida',
+                image: character.imagen || 'https://via.placeholder.com/300x400?text=Sin+imagen',
+                actor: character.interpretado_por || 'No especificado',
             }));
             
             filteredCharacters = [...allCharacters];
@@ -54,40 +61,31 @@ function fetchCharacters() {
         });
 }
 
-// Función para buscar personajes usando jQuery AJAX
+// Función para buscar personajes
 function searchCharacters(query) {
     $loading.show();
     $charactersGrid.empty();
     
-    $.ajax({
-        url: API_URL,
-        method: 'GET',
-        data: { 'filter[name_cont]': query },
-        dataType: 'json',
-        success: function(data) {
-            filteredCharacters = data.data.map(character => ({
-                id: character.id,
-                name: character.attributes.name,
-                house: character.attributes.house || 'Desconocida',
-                species: character.attributes.species || 'Desconocida',
-                image: character.attributes.image || 'https://via.placeholder.com/300x400?text=Sin+imagen'
-            }));
-            
-            displayCharacters(filteredCharacters);
-        },
-        error: function(error) {
-            console.error('Error en la búsqueda:', error);
-            $charactersGrid.html(`
-                <div class="col-12 text-center text-danger">
-                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
-                    <p>Error en la búsqueda. Inténtalo de nuevo.</p>
-                </div>
-            `);
-        },
-        complete: function() {
-            $loading.hide();
-        }
-    });
+    // Filtrar los personajes ya cargados
+    const searchQuery = query.toLowerCase();
+    filteredCharacters = allCharacters.filter(character => 
+        character.name.toLowerCase().includes(searchQuery) ||
+        character.house.toLowerCase().includes(searchQuery) ||
+        (character.actor && character.actor.toLowerCase().includes(searchQuery))
+    );
+    
+    if (filteredCharacters.length === 0) {
+        $charactersGrid.html(`
+            <div class="col-12 text-center">
+                <i class="fas fa-search fa-3x mb-3 text-muted"></i>
+                <p>No se encontraron personajes que coincidan con "${query}".</p>
+            </div>
+        `);
+    } else {
+        displayCharacters(filteredCharacters);
+    }
+    
+    $loading.hide();
 }
 
 // Función para filtrar personajes por casa
@@ -125,15 +123,15 @@ function displayCharacters(characters) {
         const characterCard = `
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <div class="character-card">
-                    <img src="${character.image}" alt="${character.name}" class="character-image">
+                    <img src="${character.image}" alt="${character.name}" class="character-image" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x400?text=Imagen+no+disponible'">
                     <div class="character-info">
                         <h3 class="character-name">${character.name}</h3>
                         <span class="character-house house-${houseClass}">
                             ${character.house}
                         </span>
                         <div class="character-details">
-                            <p><strong>Especie:</strong> ${character.species}</p>
-                            <p><strong>Patronus:</strong> ${character.patronus}</p>
+                            ${character.nickname ? `<p><strong>Apodo:</strong> ${character.nickname}</p>` : ''}
+                            <p><strong>Casa:</strong> ${character.house}</p>
                             <p><strong>Intérprete:</strong> ${character.actor}</p>
                         </div>
                     </div>
