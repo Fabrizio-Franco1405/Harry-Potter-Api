@@ -22,6 +22,19 @@ const $searchInput = $('#searchInput');
 const $searchBtn = $('#searchBtn');
 const $filters = $('.filters .btn');
 
+// Función para obtener una imagen de placeholder basada en la casa
+function getHousePlaceholder(house) {
+    const houseLower = (house || '').toLowerCase();
+    const colors = {
+        'gryffindor': 'DC143C', // Rojo
+        'slytherin': '2E8B57',  // Verde
+        'ravenclaw': '4169E1',   // Azul
+        'hufflepuff': 'FFD700'   // Amarillo
+    };
+    const color = colors[houseLower] || '808080'; // Gris por defecto
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(house || '?')}&background=${color}&color=fff&size=300`;
+}
+
 // Función para obtener los personajes usando Fetch
 function fetchCharacters() {
     $loading.show();
@@ -35,14 +48,28 @@ function fetchCharacters() {
             return response.json();
         })
         .then(characters => {
-            allCharacters = characters.map(character => ({
-                id: character.id,
-                name: character.personaje || 'Personaje desconocido',
-                nickname: character.apodo || '',
-                house: character.casaDeHogwarts || 'Desconocida',
-                image: character.imagen || 'https://via.placeholder.com/300x400?text=Sin+imagen',
-                actor: character.interpretado_por || 'No especificado',
-            }));
+            // Verificar si la respuesta es un array
+            if (!Array.isArray(characters)) {
+                throw new Error('Formato de datos inesperado');
+            }
+
+            // Mapear todos los personajes con manejo de imágenes
+            allCharacters = characters.map(character => {
+                const house = character.casaDeHogwarts || 'Desconocida';
+                const name = character.personaje || 'Personaje desconocido';
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                return {
+                    id: character.id || Math.random().toString(36).substr(2, 9),
+                    name: name,
+                    nickname: character.apodo || '',
+                    house: house,
+                    image: character.imagen || getHousePlaceholder(house),
+                    actor: character.interpretado_por || 'No especificado',
+                    // Agregamos un fallback en caso de que la imagen falle al cargar
+                    fallbackImage: getHousePlaceholder(house)
+                };
+            });
             
             filteredCharacters = [...allCharacters];
             displayCharacters(filteredCharacters);
@@ -52,7 +79,10 @@ function fetchCharacters() {
             $charactersGrid.html(`
                 <div class="col-12 text-center text-danger">
                     <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
-                    <p>Error al cargar los personajes. Inténtalo de nuevo más tarde.</p>
+                    <p>Error al cargar los personajes: ${error.message}</p>
+                    <button class="btn btn-primary mt-2" onclick="fetchCharacters()">
+                        <i class="fas fa-sync-alt me-2"></i>Reintentar
+                    </button>
                 </div>
             `);
         })
@@ -123,7 +153,10 @@ function displayCharacters(characters) {
         const characterCard = `
             <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                 <div class="character-card">
-                    <img src="${character.image}" alt="${character.name}" class="character-image" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x400?text=Imagen+no+disponible'">
+                    <img src="${character.image}" 
+                 alt="${character.name}" 
+                 class="character-image" 
+                 onerror="this.onerror=null; this.src='${character.fallbackImage}'; this.alt='${character.name} (sin imagen)'">
                     <div class="character-info">
                         <h3 class="character-name">${character.name}</h3>
                         <span class="character-house house-${houseClass}">
